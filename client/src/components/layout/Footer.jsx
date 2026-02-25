@@ -10,7 +10,7 @@ import {
   CreditCard,
   Shield,
 } from "lucide-react";
-import { Container } from "./Container";
+import Container from "./Container";
 
 function Footer() {
   const footerLinks = {
@@ -78,11 +78,11 @@ function Footer() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3">
                   <MapPin className="w-4 h-4 text-blue-400" />
-                  <span>123 Commerce St, New York, NY 10001</span>
+                  <span>123 MG Road, Bangalore, KA 560001</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-blue-400" />
-                  <span>1-800-SHOPSMART</span>
+                  <span>+91 80 1234 5678</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-blue-400" />

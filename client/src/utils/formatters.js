@@ -4,8 +4,8 @@
  * @param {string} currency
  * @returns {string}
  */
-export function formatCurrency(amount, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
+export function formatCurrency(amount, currency = "INR") {
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency,
   }).format(amount);
@@ -17,7 +17,7 @@ export function formatCurrency(amount, currency = "USD") {
  * @returns {string}
  */
 export function formatDate(date) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-IN", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -30,7 +30,7 @@ export function formatDate(date) {
  * @returns {string}
  */
 export function formatDateTime(date) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-IN", {
     year: "numeric",
     month: "short",
     day: "numeric",

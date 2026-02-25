@@ -58,12 +58,7 @@ export function isValidPhone(phone) {
   return phoneRegex.test(phone);
 }
 
-/**
- * Validate zip code
- * @param {string} zipCode
- * @returns {boolean}
- */
 export function isValidZipCode(zipCode) {
-  const zipRegex = /^\d{5}(-\d{4})?$/;
+  const zipRegex = /^\d{6}$/;
   return zipRegex.test(zipCode);
 }

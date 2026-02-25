@@ -21,7 +21,7 @@ function Checkout() {
     city: "",
     state: "",
     zipCode: "",
-    country: "US",
+    country: "IN",
     cardNumber: "",
     expiry: "",
     cvv: "",
@@ -47,7 +47,7 @@ function Checkout() {
     if (!formData.city) newErrors.city = "City is required";
     if (!formData.state) newErrors.state = "State is required";
     if (!formData.zipCode || !isValidZipCode(formData.zipCode)) {
-      newErrors.zipCode = "Valid ZIP code is required";
+      newErrors.zipCode = "Valid Pin Code is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -237,7 +237,7 @@ function Checkout() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        ZIP Code
+                        Pin Code
                       </label>
                       <input
                         type="text"

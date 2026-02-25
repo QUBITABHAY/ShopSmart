@@ -35,8 +35,8 @@ function Products() {
     {
       id: 1,
       name: "Premium Wireless Headphones",
-      price: 299.99,
-      originalPrice: 399.99,
+      price: 24999,
+      originalPrice: 32999,
       imageUrl:
         "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
       category: "Electronics",
@@ -47,7 +47,7 @@ function Products() {
     {
       id: 2,
       name: "Smart Fitness Watch",
-      price: 199.99,
+      price: 15999,
       imageUrl:
         "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
       category: "Electronics",
@@ -58,7 +58,7 @@ function Products() {
     {
       id: 3,
       name: "Leather Messenger Bag",
-      price: 149.99,
+      price: 4499,
       imageUrl:
         "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400",
       category: "Accessories",
@@ -69,7 +69,7 @@ function Products() {
     {
       id: 4,
       name: "Minimalist Desk Lamp",
-      price: 89.99,
+      price: 2999,
       imageUrl:
         "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400",
       category: "Home",
@@ -80,7 +80,7 @@ function Products() {
     {
       id: 5,
       name: "Organic Cotton T-Shirt",
-      price: 49.99,
+      price: 999,
       imageUrl:
         "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
       category: "Clothing",
@@ -91,7 +91,7 @@ function Products() {
     {
       id: 6,
       name: "Ceramic Pour-Over Set",
-      price: 79.99,
+      price: 2499,
       imageUrl:
         "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
       category: "Kitchen",
@@ -102,7 +102,7 @@ function Products() {
     {
       id: 7,
       name: "Wireless Charging Pad",
-      price: 39.99,
+      price: 1499,
       imageUrl:
         "https://images.unsplash.com/photo-1586816879360-004f5b0c1e1c?w=400",
       category: "Electronics",
@@ -113,7 +113,7 @@ function Products() {
     {
       id: 8,
       name: "Bamboo Sunglasses",
-      price: 69.99,
+      price: 1999,
       imageUrl:
         "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400",
       category: "Accessories",
@@ -124,7 +124,7 @@ function Products() {
     {
       id: 9,
       name: "Portable Bluetooth Speaker",
-      price: 129.99,
+      price: 7999,
       imageUrl:
         "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
       category: "Electronics",
@@ -135,7 +135,7 @@ function Products() {
     {
       id: 10,
       name: "Yoga Mat Premium",
-      price: 59.99,
+      price: 2999,
       imageUrl:
         "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400",
       category: "Sports",
@@ -146,7 +146,7 @@ function Products() {
     {
       id: 11,
       name: "Stainless Steel Water Bottle",
-      price: 34.99,
+      price: 1499,
       imageUrl:
         "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400",
       category: "Sports",
@@ -157,7 +157,7 @@ function Products() {
     {
       id: 12,
       name: "Canvas Backpack",
-      price: 89.99,
+      price: 3499,
       imageUrl:
         "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
       category: "Accessories",
@@ -308,10 +308,10 @@ function Products() {
                 </h3>
                 <div className="space-y-3">
                   {[
-                    { label: "Under $50", value: "0-50" },
-                    { label: "$50 - $100", value: "50-100" },
-                    { label: "$100 - $200", value: "100-200" },
-                    { label: "Over $200", value: "200-" },
+                    { label: "Under ₹1,000", value: "0-1000" },
+                    { label: "₹1,000 - ₹5,000", value: "1000-5000" },
+                    { label: "₹5,000 - ₹10,000", value: "5000-10000" },
+                    { label: "Over ₹10,000", value: "10000-" },
                   ].map((range) => (
                     <label
                       key={range.value}

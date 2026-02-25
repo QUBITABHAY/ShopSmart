@@ -229,7 +229,7 @@ function ProductDetail() {
                 <p className="text-sm font-medium text-gray-900">
                   Free Shipping
                 </p>
-                <p className="text-xs text-gray-500">On orders over $50</p>
+                <p className="text-xs text-gray-500">On orders over ₹500</p>
               </div>
               <div className="text-center">
                 <Shield className="w-8 h-8 mx-auto text-primary mb-2" />
