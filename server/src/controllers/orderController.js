@@ -173,11 +173,12 @@ export const updateOrderStatus = async (req, res) => {
     const order = await prisma.order.update({
       where: { id },
       data: { status },
+      include: { user: { select: { email: true, name: true } } },
     });
 
     res.json({
       success: true,
-      message: "Order status updated",
+      message: `Order status updated to ${status}`,
       data: { order },
     });
   } catch (error) {
@@ -185,6 +186,64 @@ export const updateOrderStatus = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error updating order status",
+      error: error.message,
+    });
+  }
+};
+
+export const cancelOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await prisma.order.findUnique({
+      where: { id },
+    });
+
+    if (!order || (order.userId !== req.user.id && !req.user.isAdmin)) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    if (order.status !== "PENDING" && !req.user.isAdmin) {
+      return res.status(400).json({
+        success: false,
+        message: "Only pending orders can be cancelled",
+      });
+    }
+
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: { status: "CANCELLED" },
+    });
+
+    // Restore stock
+    const orderItems = await prisma.orderItem.findMany({
+      where: { orderId: id },
+    });
+
+    for (const item of orderItems) {
+      await prisma.product.update({
+        where: { id: item.productId },
+        data: {
+          stock: {
+            increment: item.quantity,
+          },
+        },
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Order cancelled successfully",
+      data: { order: updatedOrder },
+    });
+  } catch (error) {
+    console.error("Cancel order error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error cancelling order",
       error: error.message,
     });
   }
