@@ -17,13 +17,13 @@ export const orderService = {
   },
 
   async cancel(id) {
-    const response = await api.put(`/orders/${id}/cancel`);
+    const response = await api.patch(`/orders/${id}/cancel`);
     return response.data;
   },
 
   // Admin methods
   async updateStatus(id, status) {
-    const response = await api.put(`/orders/${id}/status`, { status });
+    const response = await api.patch(`/orders/${id}/status`, { status });
     return response.data;
   },
 };

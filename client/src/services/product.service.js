@@ -17,8 +17,8 @@ export const productService = {
   },
 
   async search(query) {
-    const response = await api.get("/products/search", {
-      params: { q: query },
+    const response = await api.get("/products", {
+      params: { search: query },
     });
     return response.data;
   },

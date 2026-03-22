@@ -1,7 +1,10 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Header, Footer } from "./components/layout";
 import { CartDrawer } from "./components/cart";
 import { ErrorBoundary } from "./components/common";
+import useAuthStore from "./store/authStore";
+import useCartStore from "./store/cartStore";
 import {
   Home,
   Products,
@@ -26,6 +29,17 @@ function AppLayout({ children }) {
 }
 
 function App() {
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+  const fetchCart = useCartStore((state) => state.fetchCart);
+
+  useEffect(() => {
+    const init = async () => {
+      await checkAuth();
+      await fetchCart();
+    };
+    init();
+  }, [checkAuth, fetchCart]);
+
   return (
     <ErrorBoundary>
       <Router>

@@ -16,9 +16,8 @@ export const authService = {
   },
 
   async logout() {
-    const response = await api.post("/auth/logout");
     localStorage.removeItem("token");
-    return response.data;
+    return { success: true, message: "Logged out successfully" };
   },
 
   async getProfile() {

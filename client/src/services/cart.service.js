@@ -7,17 +7,17 @@ export const cartService = {
   },
 
   async addItem(productId, quantity = 1) {
-    const response = await api.post("/cart/items", { productId, quantity });
+    const response = await api.post("/cart", { productId, quantity });
     return response.data;
   },
 
   async updateQuantity(itemId, quantity) {
-    const response = await api.put(`/cart/items/${itemId}`, { quantity });
+    const response = await api.put(`/cart/${itemId}`, { quantity });
     return response.data;
   },
 
   async removeItem(itemId) {
-    const response = await api.delete(`/cart/items/${itemId}`);
+    const response = await api.delete(`/cart/${itemId}`);
     return response.data;
   },
 
