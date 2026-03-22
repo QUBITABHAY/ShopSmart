@@ -1,6 +1,5 @@
 import { Container } from "../../components/layout";
 import { Settings, Package, Users, BarChart3 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 function AdminDashboard() {
   const stats = [

@@ -1,5 +1,4 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { cn } from "../../lib/utils";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";
 

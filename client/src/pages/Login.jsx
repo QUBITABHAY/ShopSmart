@@ -142,7 +142,7 @@ function Login() {
 
           <div className="mt-8 pt-6 border-t border-gray-100 text-center">
             <p className="text-gray-600">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 to="/register"
                 className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-colors"

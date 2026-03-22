@@ -47,14 +47,6 @@ function Footer() {
     { icon: Youtube, href: "#", label: "YouTube" },
   ];
 
-  const paymentMethods = [
-    "visa",
-    "mastercard",
-    "amex",
-    "paypal",
-    "applepay",
-    "googlepay",
-  ];
 
   return (
     <footer className="bg-gray-900 text-gray-300">

@@ -9,7 +9,7 @@ import {
   Star,
 } from "lucide-react";
 import { Container, Sidebar } from "../components/layout";
-import { ProductGrid, QuickView } from "../components/product";
+import { QuickView } from "../components/product";
 import { useProducts } from "../hooks/useProducts";
 import { useCart } from "../hooks/useCart";
 import { formatCurrency } from "../utils/formatters";
@@ -27,7 +27,7 @@ function Products() {
     search: searchParams.get("search"),
   };
 
-  const { products, categories, loading, filters, updateFilters } =
+  const { products, categories, filters, updateFilters } =
     useProducts(initialFilters);
 
   // Mock products for demo

@@ -7,8 +7,6 @@ import {
   CreditCard,
   Headphones,
   Star,
-  ChevronLeft,
-  ChevronRight,
   Eye,
   Heart,
   ShoppingCart,
@@ -16,7 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Container } from "../components/layout";
-import { ProductGrid, QuickView } from "../components/product";
+import { QuickView } from "../components/product";
 import { productService } from "../services/product.service";
 import { Loader } from "../components/common";
 import { useCart } from "../hooks/useCart";
@@ -27,7 +25,6 @@ function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const { addItem } = useCart();
 
   useEffect(() => {
@@ -214,24 +211,6 @@ function Home() {
     },
   ];
 
-  const heroSlides = [
-    {
-      title: "Summer Collection 2024",
-      subtitle: "Up to 40% off on selected items",
-      cta: "Shop Now",
-      image:
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200",
-      color: "from-blue-600 to-indigo-700",
-    },
-    {
-      title: "Tech Essentials",
-      subtitle: "Latest gadgets at unbeatable prices",
-      cta: "Explore",
-      image:
-        "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1200",
-      color: "from-purple-600 to-pink-600",
-    },
-  ];
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -591,7 +570,7 @@ function Home() {
                     />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-4">"{t.text}"</p>
+                <p className="text-gray-700 mb-4">&quot;{t.text}&quot;</p>
                 <div className="flex items-center gap-3">
                   <img
                     src={t.avatar}

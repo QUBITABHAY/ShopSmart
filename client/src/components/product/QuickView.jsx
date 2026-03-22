@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Minus, Plus, ShoppingCart, Star, Heart } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Star, Heart } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";

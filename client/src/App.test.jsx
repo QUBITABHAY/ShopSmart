@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 
 describe("App", () => {
   it("renders ShopSmart title", () => {
-    global.fetch = vi.fn(() =>
+    vi.stubGlobal("fetch", vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
@@ -13,7 +13,7 @@ describe("App", () => {
             timestamp: "now",
           }),
       }),
-    );
+    ));
 
     render(<App />);
     const linkElements = screen.getAllByText(/ShopSmart/i);

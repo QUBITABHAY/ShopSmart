@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Package, Eye, ChevronRight } from "lucide-react";
+import { Package, Eye } from "lucide-react";
 import { Container } from "../components/layout";
 import { useOrders } from "../hooks/useOrders";
 import { formatCurrency, formatDate } from "../utils/formatters";

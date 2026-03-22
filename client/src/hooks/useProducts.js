@@ -53,7 +53,7 @@ export function useProducts(initialFilters = {}) {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, []);
+  }, [fetchProducts, fetchCategories]);
 
   useEffect(() => {
     if (Object.keys(filters).length > 0) {
