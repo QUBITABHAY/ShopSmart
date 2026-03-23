@@ -31,7 +31,15 @@ function Home() {
     const fetchFeatured = async () => {
       try {
         const data = await productService.getAll({ limit: 8 });
-        setFeaturedProducts(data.products || data);
+        if (data && data.success && Array.isArray(data.data?.products)) {
+          setFeaturedProducts(data.data.products);
+        } else if (Array.isArray(data)) {
+          setFeaturedProducts(data);
+        } else if (data && Array.isArray(data.products)) {
+          setFeaturedProducts(data.products);
+        } else {
+          throw new Error("Invalid data format");
+        }
       } catch (error) {
         console.error("Failed to fetch products:", error);
         // Mock data for demo
