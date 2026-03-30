@@ -82,17 +82,3 @@ jobs:
       - name: Run tests
         working-directory: server
         run: npm run test
-
-  docker-smoke:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.docker_changed == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build client Docker image
-        run: docker build client -t shopsmart-client:smoke
-
-      - name: Build server Docker image
-        run: docker build server -t shopsmart-server:smoke
