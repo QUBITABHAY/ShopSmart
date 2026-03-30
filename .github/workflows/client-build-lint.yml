@@ -1,22 +1,34 @@
-name: Client Build and Lint
+name: CI
 
 on:
   push:
     branches:
       - main
-    paths:
-      - "client/**"
-      - ".github/workflows/client-build-lint.yml"
   pull_request:
     branches:
       - main
-    paths:
-      - "client/**"
 
 jobs:
-  build-and-lint:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      client_changed: ${{ steps.changes.outputs.client_changed }}
+      server_changed: ${{ steps.changes.outputs.server_changed }}
+      docker_changed: ${{ steps.changes.outputs.docker_changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Detect module changes
+        id: changes
+        run: ./scripts/ci/changed-modules.sh
+
+  client-ci:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.client_changed == 'true' }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,6 +48,51 @@ jobs:
         working-directory: client
         run: npm run lint
 
+      - name: Run tests
+        working-directory: client
+        run: npm run test -- --run
+
       - name: Run build
         working-directory: client
         run: npm run build
+
+  server-ci:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.server_changed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: "server/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Run lint
+        working-directory: server
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: server
+        run: npm run test
+
+  docker-smoke:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.docker_changed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build client Docker image
+        run: docker build client -t shopsmart-client:smoke
+
+      - name: Build server Docker image
+        run: docker build server -t shopsmart-server:smoke
