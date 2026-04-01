@@ -13,17 +13,18 @@ function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    isAdmin: false,
   });
   const [validationErrors, setValidationErrors] = useState({});
-
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     clearError();
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     }));
-    if (validationErrors[e.target.name]) {
-      setValidationErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -51,6 +52,7 @@ function Register() {
       formData.name,
       formData.email,
       formData.password,
+      formData.isAdmin
     );
     if (result.success) {
       navigate("/");
@@ -58,7 +60,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center py-12 px-4 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 overflow-hidden">
+    <div className="min-h-screen relative flex items-center justify-center py-12 px-4 bg-linear-to-br from-blue-600 via-blue-700 to-indigo-800 overflow-hidden">
       {/* Premium Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.05%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30" />
 
@@ -70,10 +72,10 @@ function Register() {
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20 transform transition-all">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
                 <span className="text-white font-bold text-2xl">S</span>
               </div>
-              <span className="text-3xl font-heading font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-800">
+              <span className="text-3xl font-heading font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-indigo-800">
                 ShopSmart
               </span>
             </Link>
@@ -192,10 +194,33 @@ function Register() {
               </div>
             </div>
 
+            <div className="flex items-start gap-3 p-4 bg-blue-50/50 rounded-xl border border-blue-100 group cursor-pointer transition-all hover:bg-blue-50" 
+                 onClick={() => setFormData(prev => ({...prev, isAdmin: !prev.isAdmin}))}>
+              <div className="flex items-center h-5 mt-0.5">
+                <input
+                  type="checkbox"
+                  name="isAdmin"
+                  id="isAdmin"
+                  checked={formData.isAdmin}
+                  onChange={handleChange}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-600 transition-all cursor-pointer"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+              <div className="text-sm">
+                <label htmlFor="isAdmin" className="font-semibold text-blue-900 cursor-pointer">
+                  I want to sell on ShopSmart
+                </label>
+                <p className="text-blue-700 text-xs mt-0.5">
+                  Check this box to request administrative access for managing products and orders.
+                </p>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 px-4 mt-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all focus:ring-4 focus:ring-blue-600/20 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-3.5 px-4 mt-2 bg-linear-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all focus:ring-4 focus:ring-blue-600/20 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? "Creating account..." : "Create Account"}
             </button>

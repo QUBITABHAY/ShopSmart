@@ -36,7 +36,7 @@ function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-9 h-9 bg-linear-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-md">
               <span className="text-white font-bold text-lg">S</span>
             </div>
             <span className="text-xl font-bold text-gray-900">ShopSmart</span>
@@ -90,6 +90,14 @@ function Header() {
             {/* User Menu */}
             {isAuthenticated ? (
               <div className="hidden md:flex items-center gap-1">
+                {(user?.role === 'ADMIN' || user?.role === 'MASTER_ADMIN') && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                  >
+                    <span className="text-sm font-bold">Admin Dashboard</span>
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-all"
@@ -171,6 +179,15 @@ function Header() {
             ))}
             {isAuthenticated ? (
               <>
+                {(user?.role === 'ADMIN' || user?.role === 'MASTER_ADMIN') && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="px-4 py-2.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-bold"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   onClick={() => setIsMenuOpen(false)}

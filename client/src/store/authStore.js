@@ -14,15 +14,16 @@ const useAuthStore = create(
       login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
-          const data = await authService.login(email, password);
+          const response = await authService.login(email, password);
+          const { user, token } = response.data;
           set({
-            user: data.user,
-            token: data.token,
+            user,
+            token,
             isAuthenticated: true,
             isLoading: false,
           });
-          if (data.token) {
-            localStorage.setItem("token", data.token);
+          if (token) {
+            localStorage.setItem("token", token);
           }
           return { success: true };
         } catch (error) {
@@ -34,18 +35,19 @@ const useAuthStore = create(
         }
       },
 
-      register: async (name, email, password) => {
+      register: async (name, email, password, isAdmin) => {
         set({ isLoading: true, error: null });
         try {
-          const data = await authService.register(name, email, password);
+          const response = await authService.register(name, email, password, isAdmin);
+          const { user, token } = response.data;
           set({
-            user: data.user,
-            token: data.token,
+            user,
+            token,
             isAuthenticated: true,
             isLoading: false,
           });
-          if (data.token) {
-            localStorage.setItem("token", data.token);
+          if (token) {
+            localStorage.setItem("token", token);
           }
           return { success: true };
         } catch (error) {
@@ -82,9 +84,10 @@ const useAuthStore = create(
 
         set({ isLoading: true });
         try {
-          const data = await authService.getProfile();
+          const response = await authService.getProfile();
+          const { user } = response.data;
           set({
-            user: data.user || data,
+            user: user,
             isAuthenticated: true,
             isLoading: false,
           });
