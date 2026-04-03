@@ -6,11 +6,12 @@ export const authService = {
     return response.data;
   },
 
-  async register(name, email, password) {
+  async register(name, email, password, isAdmin) {
     const response = await api.post("/auth/register", {
       name,
       email,
       password,
+      isAdmin,
     });
     return response.data;
   },

@@ -7,3 +7,7 @@ export { default as Login } from "./Login";
 export { default as Register } from "./Register";
 export { default as Profile } from "./Profile";
 export { default as Orders } from "./Orders";
+export { default as AdminDashboard } from "./admin/Dashboard";
+export { default as AdminProducts } from "./admin/AdminProducts";
+export { default as AdminOrders } from "./admin/AdminOrders";
+export { default as AdminUsers } from "./admin/AdminUsers";

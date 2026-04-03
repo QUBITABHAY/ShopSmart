@@ -19,7 +19,7 @@ const protect = async (req, res, next) => {
           id: true,
           email: true,
           name: true,
-          isAdmin: true,
+          role: true,
         },
       });
 
@@ -36,11 +36,19 @@ const protect = async (req, res, next) => {
 };
 
 const admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && (req.user.role === 'ADMIN' || req.user.role === 'MASTER_ADMIN')) {
     next();
   } else {
     res.status(401).json({ message: 'Not authorized as an admin' });
   }
 };
 
-export { protect, admin };
+const master = (req, res, next) => {
+  if (req.user && req.user.role === 'MASTER_ADMIN') {
+    next();
+  } else {
+    res.status(401).json({ message: 'Not authorized as a master admin' });
+  }
+};
+
+export { protect, admin, master };

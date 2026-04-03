@@ -22,8 +22,8 @@ export function useAuth() {
   );
 
   const handleRegister = useCallback(
-    async (name, email, password) => {
-      return await register(name, email, password);
+    async (name, email, password, isAdmin) => {
+      return await register(name, email, password, isAdmin);
     },
     [register],
   );

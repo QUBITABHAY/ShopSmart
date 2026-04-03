@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Header, Footer } from "./components/layout";
+import { Header, Footer, AdminLayout } from "./components/layout";
 import { CartDrawer } from "./components/cart";
-import { ErrorBoundary } from "./components/common";
+import { ErrorBoundary, AdminRoute, ProtectedRoute } from "./components/common";
 import useAuthStore from "./store/authStore";
 import useCartStore from "./store/cartStore";
 import {
@@ -15,6 +15,10 @@ import {
   Register,
   Profile,
   Orders,
+  AdminDashboard,
+  AdminProducts,
+  AdminOrders,
+  AdminUsers,
 } from "./pages";
 
 function AppLayout({ children }) {
@@ -48,7 +52,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Pages with layout */}
+          {/* User Pages with layout */}
           <Route
             path="/"
             element={
@@ -81,30 +85,43 @@ function App() {
               </AppLayout>
             }
           />
-          <Route
-            path="/checkout"
-            element={
-              <AppLayout>
-                <Checkout />
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <AppLayout>
-                <Profile />
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/orders"
-            element={
-              <AppLayout>
-                <Orders />
-              </AppLayout>
-            }
-          />
+          {/* Protected User Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="/checkout"
+              element={
+                <AppLayout>
+                  <Checkout />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <AppLayout>
+                  <Profile />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <AppLayout>
+                  <Orders />
+                </AppLayout>
+              }
+            />
+          </Route>
+
+          {/* Admin Routes */}
+          <Route element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/products" element={<AdminProducts />} />
+              <Route path="/admin/orders" element={<AdminOrders />} />
+              <Route path="/admin/customers" element={<AdminUsers />} />
+            </Route>
+          </Route>
         </Routes>
       </Router>
     </ErrorBoundary>

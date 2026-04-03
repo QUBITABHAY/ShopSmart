@@ -4,16 +4,19 @@ import { describe, it, expect, vi } from "vitest";
 
 describe("App", () => {
   it("renders ShopSmart title", () => {
-    vi.stubGlobal("fetch", vi.fn(() =>
-      Promise.resolve({
-        json: () =>
-          Promise.resolve({
-            status: "ok",
-            message: "Test Msg",
-            timestamp: "now",
-          }),
-      }),
-    ));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          json: () =>
+            Promise.resolve({
+              status: "ok",
+              message: "Test Msg",
+              timestamp: "now",
+            }),
+        }),
+      ),
+    );
 
     render(<App />);
     const linkElements = screen.getAllByText(/ShopSmart/i);

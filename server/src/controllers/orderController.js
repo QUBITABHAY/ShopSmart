@@ -137,7 +137,7 @@ export const getOrderById = async (req, res) => {
       },
     });
 
-    if (!order || (order.userId !== req.user.id && !req.user.isAdmin)) {
+    if (!order || (order.userId !== req.user.id && req.user.role === 'CUSTOMER')) {
       return res.status(404).json({
         success: false,
         message: "Order not found",
@@ -199,14 +199,14 @@ export const cancelOrder = async (req, res) => {
       where: { id },
     });
 
-    if (!order || (order.userId !== req.user.id && !req.user.isAdmin)) {
+    if (!order || (order.userId !== req.user.id && req.user.role === 'CUSTOMER')) {
       return res.status(404).json({
         success: false,
         message: "Order not found",
       });
     }
 
-    if (order.status !== "PENDING" && !req.user.isAdmin) {
+    if (order.status !== "PENDING" && req.user.role === 'CUSTOMER') {
       return res.status(400).json({
         success: false,
         message: "Only pending orders can be cancelled",
@@ -244,6 +244,70 @@ export const cancelOrder = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error cancelling order",
+      error: error.message,
+    });
+  }
+};
+
+export const getAdminOrders = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        address: true,
+        items: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      data: { orders },
+    });
+  } catch (error) {
+    console.error("Get admin orders error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching all orders",
+      error: error.message,
+    });
+  }
+};
+
+export const getAdminStats = async (req, res) => {
+  try {
+    const [orderStats, productCount, userCount] = await Promise.all([
+      prisma.order.aggregate({
+        _sum: {
+          total: true,
+        },
+        _count: {
+          id: true,
+        },
+      }),
+      prisma.product.count(),
+      prisma.user.count(),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        totalRevenue: orderStats._sum.total || 0,
+        totalOrders: orderStats._count.id || 0,
+        totalProducts: productCount,
+        totalCustomers: userCount,
+      },
+    });
+  } catch (error) {
+    console.error("Get admin stats error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching admin stats",
       error: error.message,
     });
   }

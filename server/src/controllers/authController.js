@@ -4,7 +4,7 @@ import prisma from "../config/db.js";
 
 export const register = async (req, res) => {
   try {
-    const { email, password, name, phone } = req.body;
+    const { email, password, name, phone, isAdmin } = req.body;
 
     if (!email || !password || !name) {
       return res.status(400).json({
@@ -33,13 +33,14 @@ export const register = async (req, res) => {
         password: hashedPassword,
         name,
         phone: phone || null,
+        role: isAdmin ? "ADMIN" : "CUSTOMER",
       },
       select: {
         id: true,
         email: true,
         name: true,
         phone: true,
-        isAdmin: true,
+        role: true,
         createdAt: true,
       },
     });
@@ -125,7 +126,7 @@ export const getProfile = async (req, res) => {
         email: true,
         name: true,
         phone: true,
-        isAdmin: true,
+        role: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -161,7 +162,7 @@ export const updateProfile = async (req, res) => {
         email: true,
         name: true,
         phone: true,
-        isAdmin: true,
+        role: true,
         updatedAt: true,
       },
     });

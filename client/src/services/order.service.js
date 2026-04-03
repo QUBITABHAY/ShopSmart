@@ -26,6 +26,16 @@ export const orderService = {
     const response = await api.patch(`/orders/${id}/status`, { status });
     return response.data;
   },
+
+  async getAdminOrders() {
+    const response = await api.get("/orders/admin/orders");
+    return response.data;
+  },
+
+  async getAdminStats() {
+    const response = await api.get("/orders/admin/stats");
+    return response.data;
+  },
 };
 
 export default orderService;
