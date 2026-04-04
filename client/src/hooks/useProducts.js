@@ -14,7 +14,9 @@ export function useProducts(initialFilters = {}) {
       setError(null);
       try {
         const data = await productService.getAll(filterParams);
-        setProducts(data.products || data);
+        if (data.success) {
+          setProducts(data.data.products);
+        }
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch products");
       } finally {
@@ -27,7 +29,9 @@ export function useProducts(initialFilters = {}) {
   const fetchCategories = useCallback(async () => {
     try {
       const data = await productService.getCategories();
-      setCategories(data.categories || data);
+      if (data.success) {
+        setCategories(data.data.categories);
+      }
     } catch (err) {
       console.error("Failed to fetch categories:", err);
     }

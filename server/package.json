@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest",
+    "test": "node --experimental-vm-modules -r dotenv/config node_modules/jest/bin/jest.js",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0"
   },
   "type": "module",
