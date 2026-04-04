@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
 import { Eye, Filter } from "lucide-react";
 import { orderService } from "../../services/order.service";
+import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
 import { cn } from "../../lib/utils";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("ALL");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
       const response = await orderService.getAdminOrders();
-      setOrders(response.data.data.orders);
+      if (response.success) {
+        setOrders(response.data.orders);
+      }
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
@@ -153,7 +158,13 @@ const AdminOrders = () => {
                           <option value="DELIVERED">Delivered</option>
                           <option value="CANCELLED">Cancelled</option>
                         </select>
-                        <button className="p-2 text-gray-400 hover:text-primary transition-colors">
+                        <button 
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsModalOpen(true);
+                          }}
+                          className="p-2 text-gray-400 hover:text-primary transition-colors"
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
                       </div>
@@ -174,6 +185,11 @@ const AdminOrders = () => {
           </table>
         </div>
       </div>
+      <OrderDetailsModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        order={selectedOrder}
+      />
     </div>
   );
 };

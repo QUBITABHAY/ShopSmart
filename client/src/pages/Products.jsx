@@ -30,153 +30,6 @@ function Products() {
   const { products, categories, filters, updateFilters } =
     useProducts(initialFilters);
 
-  // Mock products for demo
-  const mockProducts = [
-    {
-      id: 1,
-      name: "Premium Wireless Headphones",
-      price: 24999,
-      originalPrice: 32999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
-      category: "Electronics",
-      rating: 4.8,
-      reviewCount: 234,
-      stock: 5,
-    },
-    {
-      id: 2,
-      name: "Smart Fitness Watch",
-      price: 15999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
-      category: "Electronics",
-      rating: 4.6,
-      reviewCount: 189,
-      stock: 12,
-    },
-    {
-      id: 3,
-      name: "Leather Messenger Bag",
-      price: 4499,
-      imageUrl:
-        "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400",
-      category: "Accessories",
-      rating: 4.9,
-      reviewCount: 156,
-      stock: 8,
-    },
-    {
-      id: 4,
-      name: "Minimalist Desk Lamp",
-      price: 2999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400",
-      category: "Home",
-      rating: 4.7,
-      reviewCount: 98,
-      stock: 15,
-    },
-    {
-      id: 5,
-      name: "Organic Cotton T-Shirt",
-      price: 999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
-      category: "Clothing",
-      rating: 4.5,
-      reviewCount: 312,
-      stock: 25,
-    },
-    {
-      id: 6,
-      name: "Ceramic Pour-Over Set",
-      price: 2499,
-      imageUrl:
-        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-      category: "Kitchen",
-      rating: 4.8,
-      reviewCount: 87,
-      stock: 10,
-    },
-    {
-      id: 7,
-      name: "Wireless Charging Pad",
-      price: 1499,
-      imageUrl:
-        "https://images.unsplash.com/photo-1586816879360-004f5b0c1e1c?w=400",
-      category: "Electronics",
-      rating: 4.4,
-      reviewCount: 145,
-      stock: 30,
-    },
-    {
-      id: 8,
-      name: "Bamboo Sunglasses",
-      price: 1999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400",
-      category: "Accessories",
-      rating: 4.6,
-      reviewCount: 76,
-      stock: 18,
-    },
-    {
-      id: 9,
-      name: "Portable Bluetooth Speaker",
-      price: 7999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
-      category: "Electronics",
-      rating: 4.7,
-      reviewCount: 203,
-      stock: 22,
-    },
-    {
-      id: 10,
-      name: "Yoga Mat Premium",
-      price: 2999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400",
-      category: "Sports",
-      rating: 4.5,
-      reviewCount: 167,
-      stock: 40,
-    },
-    {
-      id: 11,
-      name: "Stainless Steel Water Bottle",
-      price: 1499,
-      imageUrl:
-        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400",
-      category: "Sports",
-      rating: 4.8,
-      reviewCount: 289,
-      stock: 50,
-    },
-    {
-      id: 12,
-      name: "Canvas Backpack",
-      price: 3499,
-      imageUrl:
-        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
-      category: "Accessories",
-      rating: 4.6,
-      reviewCount: 134,
-      stock: 15,
-    },
-  ];
-
-  const displayProducts = products.length > 0 ? products : mockProducts;
-  const mockCategories = [
-    "All",
-    "Electronics",
-    "Accessories",
-    "Clothing",
-    "Home",
-    "Kitchen",
-    "Sports",
-  ];
 
   // Update filters when URL changes
   useEffect(() => {
@@ -205,10 +58,12 @@ function Products() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                {filters.category || "All Products"}
+                {filters.category ? 
+                  (categories.find(c => c.id === filters.category)?.name || "Category Products") : 
+                  "All Products"}
               </h1>
               <p className="text-gray-500 mt-1">
-                {displayProducts.length} products found
+                {products.length} products found
                 {filters.search && ` for "${filters.search}"`}
               </p>
             </div>
@@ -279,23 +134,33 @@ function Products() {
               <div className="bg-white rounded-xl p-6 border border-gray-100">
                 <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
                 <div className="space-y-2">
-                  {mockCategories.map((cat) => (
+                  <button
+                    onClick={() => handleFilterChange({ category: null })}
+                    className={cn(
+                      "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
+                      !filters.category
+                        ? "bg-blue-50 text-blue-600 font-medium"
+                        : "text-gray-600 hover:bg-gray-100",
+                    )}
+                  >
+                    All Categories
+                  </button>
+                  {categories.map((cat) => (
                     <button
-                      key={cat}
+                      key={cat.id}
                       onClick={() =>
                         handleFilterChange({
-                          category: cat === "All" ? null : cat,
+                          category: cat.id,
                         })
                       }
                       className={cn(
                         "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
-                        filters.category === cat ||
-                          (cat === "All" && !filters.category)
+                        filters.category === cat.id
                           ? "bg-blue-50 text-blue-600 font-medium"
                           : "text-gray-600 hover:bg-gray-100",
                       )}
                     >
-                      {cat}
+                      {cat.name}
                     </button>
                   ))}
                 </div>
@@ -396,14 +261,14 @@ function Products() {
           {/* Product Grid */}
           <div className="flex-1">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-              {displayProducts.map((product) => (
+              {products.map((product) => (
                 <div
                   key={product.id}
                   className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-gray-200 transition-all duration-300"
                 >
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
                     <img
-                      src={product.imageUrl}
+                      src={product.image || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400"}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -430,9 +295,9 @@ function Products() {
                   </div>
                   <div className="p-4">
                     <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
-                      {product.category}
+                      {product.category?.name || "Uncategorized"}
                     </p>
-                    <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors text-left">
                       {product.name}
                     </h3>
                     <div className="flex items-center gap-1 mb-2">
@@ -441,14 +306,14 @@ function Products() {
                           key={i}
                           className={cn(
                             "w-3.5 h-3.5",
-                            i < Math.floor(product.rating)
+                            i < (product.rating || 5)
                               ? "text-amber-400 fill-current"
                               : "text-gray-200",
                           )}
                         />
                       ))}
                       <span className="text-xs text-gray-500 ml-1">
-                        ({product.reviewCount})
+                        ({product.reviewCount || 0})
                       </span>
                     </div>
                     <div className="flex items-center justify-between">

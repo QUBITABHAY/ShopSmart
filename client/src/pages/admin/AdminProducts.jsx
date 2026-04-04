@@ -8,6 +8,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { productService } from "../../services/product.service";
+import ProductModal from "../../components/admin/ProductModal";
 import { cn } from "../../lib/utils";
 
 const AdminProducts = () => {
@@ -16,6 +17,10 @@ const AdminProducts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -24,9 +29,10 @@ const AdminProducts = () => {
         search: searchTerm,
         page,
         limit: 10,
+        category: selectedCategory === "ALL" ? "" : selectedCategory,
       });
-      setProducts(response.data.data.products);
-      setTotalPages(response.data.data.pagination.totalPages);
+      setProducts(response.data.products);
+      setTotalPages(response.data.pagination.totalPages);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -36,7 +42,21 @@ const AdminProducts = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [searchTerm, page]);
+  }, [searchTerm, page, selectedCategory]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await productService.getCategories();
+        if (response.success) {
+          setCategories(response.data.categories);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -49,6 +69,16 @@ const AdminProducts = () => {
     }
   };
 
+  const handleAddProduct = () => {
+    setEditingProduct(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -58,7 +88,10 @@ const AdminProducts = () => {
             Manage your store's inventory and catalog.
           </p>
         </div>
-        <button className="btn-primary flex items-center justify-center gap-2">
+        <button 
+          onClick={handleAddProduct}
+          className="btn-primary flex items-center justify-center gap-2"
+        >
           <Plus className="w-4 h-4" />
           Add New Product
         </button>
@@ -77,10 +110,17 @@ const AdminProducts = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <select className="border rounded-lg px-3 py-2 text-sm outline-none bg-white">
-              <option>All Categories</option>
-              <option>Electronics</option>
-              <option>Fashion</option>
+            <select 
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="border rounded-lg px-3 py-2 text-sm outline-none bg-white"
+            >
+              <option value="ALL">All Categories</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -183,7 +223,10 @@ const AdminProducts = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button className="p-2 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
+                        <button 
+                          onClick={() => handleEditProduct(product)}
+                          className="p-2 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                        >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
@@ -236,6 +279,12 @@ const AdminProducts = () => {
           </div>
         )}
       </div>
+      <ProductModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        product={editingProduct}
+        onSave={fetchProducts}
+      />
     </div>
   );
 };

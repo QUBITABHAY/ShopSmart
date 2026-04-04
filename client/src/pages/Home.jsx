@@ -30,115 +30,33 @@ function Home() {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const data = await productService.getAll({ limit: 8 });
-        if (data && data.success && Array.isArray(data.data?.products)) {
-          setFeaturedProducts(data.data.products);
-        } else if (Array.isArray(data)) {
-          setFeaturedProducts(data);
-        } else if (data && Array.isArray(data.products)) {
-          setFeaturedProducts(data.products);
-        } else {
-          throw new Error("Invalid data format");
+        const response = await productService.getAll({ limit: 8 });
+        if (response.success) {
+          setFeaturedProducts(response.data.products);
         }
       } catch (error) {
         console.error("Failed to fetch products:", error);
-        // Mock data for demo
-        setFeaturedProducts([
-          {
-            id: 1,
-            name: "Premium Wireless Headphones",
-            price: 24999,
-            originalPrice: 32999,
-            imageUrl:
-              "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
-            category: "Electronics",
-            rating: 4.8,
-            reviewCount: 234,
-            stock: 5,
-          },
-          {
-            id: 2,
-            name: "Smart Fitness Watch",
-            price: 15999,
-            imageUrl:
-              "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
-            category: "Electronics",
-            rating: 4.6,
-            reviewCount: 189,
-            stock: 12,
-          },
-          {
-            id: 3,
-            name: "Leather Messenger Bag",
-            price: 4499,
-            imageUrl:
-              "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400",
-            category: "Accessories",
-            rating: 4.9,
-            reviewCount: 156,
-            stock: 8,
-          },
-          {
-            id: 4,
-            name: "Minimalist Desk Lamp",
-            price: 2999,
-            imageUrl:
-              "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400",
-            category: "Home",
-            rating: 4.7,
-            reviewCount: 98,
-            stock: 15,
-          },
-          {
-            id: 5,
-            name: "Organic Cotton T-Shirt",
-            price: 999,
-            imageUrl:
-              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
-            category: "Clothing",
-            rating: 4.5,
-            reviewCount: 312,
-            stock: 25,
-          },
-          {
-            id: 6,
-            name: "Ceramic Pour-Over Set",
-            price: 2499,
-            imageUrl:
-              "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-            category: "Kitchen",
-            rating: 4.8,
-            reviewCount: 87,
-            stock: 10,
-          },
-          {
-            id: 7,
-            name: "Wireless Charging Pad",
-            price: 1499,
-            imageUrl:
-              "https://images.unsplash.com/photo-1586816879360-004f5b0c1e1c?w=400",
-            category: "Electronics",
-            rating: 4.4,
-            reviewCount: 145,
-            stock: 30,
-          },
-          {
-            id: 8,
-            name: "Bamboo Sunglasses",
-            price: 1999,
-            imageUrl:
-              "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400",
-            category: "Accessories",
-            rating: 4.6,
-            reviewCount: 76,
-            stock: 18,
-          },
-        ]);
       } finally {
         setLoading(false);
       }
     };
     fetchFeatured();
+  }, []);
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await productService.getCategories();
+        if (response.success) {
+          setCategories(response.data.categories);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
   }, []);
 
   const features = [
@@ -168,56 +86,6 @@ function Home() {
     },
   ];
 
-  const categories = [
-    {
-      name: "Electronics",
-      image:
-        "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300",
-      count: 120,
-    },
-    {
-      name: "Fashion",
-      image:
-        "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300",
-      count: 85,
-    },
-    {
-      name: "Home & Garden",
-      image:
-        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=300",
-      count: 64,
-    },
-    {
-      name: "Sports",
-      image:
-        "https://images.unsplash.com/photo-1461896836934- voices-of-hope?w=300",
-      count: 42,
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah M.",
-      role: "Verified Buyer",
-      text: "Amazing quality and fast shipping! Will definitely shop here again.",
-      rating: 5,
-      avatar: "https://i.pravatar.cc/100?img=1",
-    },
-    {
-      name: "James K.",
-      role: "Verified Buyer",
-      text: "Great customer service. They helped me find exactly what I needed.",
-      rating: 5,
-      avatar: "https://i.pravatar.cc/100?img=2",
-    },
-    {
-      name: "Emily R.",
-      role: "Verified Buyer",
-      text: "Best prices I've found online. The products are top-notch quality.",
-      rating: 5,
-      avatar: "https://i.pravatar.cc/100?img=3",
-    },
-  ];
 
 
   return (
@@ -377,19 +245,24 @@ function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {categories.map((cat) => (
               <Link
-                key={cat.name}
-                to={`/products?category=${cat.name}`}
-                className="group relative overflow-hidden rounded-2xl aspect-[4/3]"
+                key={cat.id}
+                to={`/products?category=${cat.id}`}
+                className="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-gray-100"
               >
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                {cat.image ? (
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 font-bold uppercase tracking-wider">
+                    {cat.name}
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white">
+                <div className="absolute bottom-4 left-4 text-white text-left">
                   <h3 className="font-bold text-lg">{cat.name}</h3>
-                  <p className="text-sm text-white/80">{cat.count} products</p>
                 </div>
               </Link>
             ))}
@@ -553,48 +426,6 @@ function Home() {
         </Container>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 bg-white">
-        <Container>
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              What Our Customers Say
-            </h2>
-            <p className="text-gray-500">
-              Join thousands of satisfied shoppers
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <div
-                key={i}
-                className="bg-gray-50 rounded-2xl p-6 border border-gray-100"
-              >
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 text-amber-400 fill-current"
-                    />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-4">&quot;{t.text}&quot;</p>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={t.avatar}
-                    alt={t.name}
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div>
-                    <p className="font-medium text-gray-900">{t.name}</p>
-                    <p className="text-sm text-green-600">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
 
       <QuickView
         product={quickViewProduct}
