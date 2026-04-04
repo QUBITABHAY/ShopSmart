@@ -57,18 +57,26 @@ model Category {
 }
 
 model Product {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  image       String?
-  stock       Int         @default(0)
-  categoryId  String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  category    Category    @relation(fields: [categoryId], references: [id])
+  id              String      @id @default(cuid())
+  name            String
+  description     String?
+  price           Float
+  currency        String      @default("USD")
+  image           String?
+  imageUrls       String[]    @default([])
+  specifications  Json?
+  ratingStars     Json?
+  colors          String[]    @default([])
+  seller          String?
+  customerReviews Json?
+  discount        Float?
+  stock           Int         @default(0)
+  categoryId      String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  cartItems       CartItem[]
+  orderItems      OrderItem[]
+  category        Category    @relation(fields: [categoryId], references: [id])
 
   @@index([categoryId])
 }
