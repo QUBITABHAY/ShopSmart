@@ -4,9 +4,7 @@
  * @returns {Object} { rating, reviewCount, distribution }
  */
 export const getRatingStats = (product) => {
-  if (!product) return { rating: 0, reviewCount: 0, distribution: [] };
-
-  const ratingStars = product.ratingStars || {};
+  const ratingStars = (product && product.ratingStars) || {};
   
   // Map string keys to numeric stars
   const starMap = {
