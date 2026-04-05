@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Users,
   Search,
@@ -23,9 +23,9 @@ const AdminUsers = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, searchTerm]);
+  }, [fetchUsers]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await userService.getAll({
@@ -40,7 +40,7 @@ const AdminUsers = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page, searchTerm]);
 
   const handleRoleToggle = async (userId, currentRole) => {
     const newRole = currentRole === "CUSTOMER" ? "ADMIN" : "CUSTOMER";

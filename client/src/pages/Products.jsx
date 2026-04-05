@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Grid, List, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { Container } from "../components/layout";
@@ -18,23 +18,20 @@ function Products() {
     search: searchParams.get("search"),
   };
 
-  const {
-    products,
-    categories,
-    pagination,
-    loading,
-    error,
-    filters,
-    updateFilters,
-  } = useProducts(initialFilters);
+  const { products, categories, pagination, loading, filters, updateFilters } =
+    useProducts(initialFilters);
 
-  useEffect(() => {
+  const fetchProducts = useCallback(() => {
     const newFilters = {
       category: searchParams.get("category"),
       search: searchParams.get("search"),
     };
     updateFilters(newFilters);
   }, [searchParams, updateFilters]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   // Scroll to top when page or filters change
   useEffect(() => {

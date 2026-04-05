@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
   Search,
@@ -22,7 +22,7 @@ const AdminProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await productService.getAll({
@@ -38,11 +38,11 @@ const AdminProducts = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchTerm, page, selectedCategory]);
 
   useEffect(() => {
     fetchProducts();
-  }, [searchTerm, page, selectedCategory]);
+  }, [fetchProducts]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -85,7 +85,7 @@ const AdminProducts = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Products</h1>
           <p className="text-gray-500 mt-1">
-            Manage your store's inventory and catalog.
+            Manage your store&apos;s inventory and catalog.
           </p>
         </div>
         <button 
