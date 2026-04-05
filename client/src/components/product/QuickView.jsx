@@ -3,6 +3,7 @@ import { Minus, Plus, ShoppingCart, Star, Heart } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";
+import { getRatingStats } from "../../utils/product";
 import Modal from "../common/Modal";
 
 function QuickView({ product, isOpen, onClose }) {
@@ -11,6 +12,8 @@ function QuickView({ product, isOpen, onClose }) {
   const { addItem } = useCart();
 
   if (!product) return null;
+
+  const { rating, reviewCount } = getRatingStats(product);
 
   const images =
     product.imageUrls?.length > 0 ? product.imageUrls : [product.image];
@@ -83,7 +86,7 @@ function QuickView({ product, isOpen, onClose }) {
           </div>
 
           {/* Rating */}
-          {product.rating !== undefined && (
+          {rating !== undefined && reviewCount > 0 && (
             <div className="flex items-center gap-2">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
@@ -91,7 +94,7 @@ function QuickView({ product, isOpen, onClose }) {
                     key={i}
                     className={cn(
                       "w-5 h-5",
-                      i < Math.floor(product.rating)
+                      i < Math.floor(rating)
                         ? "text-amber-400 fill-current"
                         : "text-gray-300",
                     )}
@@ -99,7 +102,7 @@ function QuickView({ product, isOpen, onClose }) {
                 ))}
               </div>
               <span className="text-sm text-gray-600">
-                {product.rating} ({product.reviewCount} reviews)
+                {rating} ({reviewCount} reviews)
               </span>
             </div>
           )}

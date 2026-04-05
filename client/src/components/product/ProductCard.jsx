@@ -4,11 +4,13 @@ import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";
+import { getRatingStats } from "../../utils/product";
 
 function ProductCard({ product, onQuickView }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { addItem } = useCart();
+  const { rating, reviewCount } = getRatingStats(product);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -105,7 +107,7 @@ function ProductCard({ product, onQuickView }) {
           </h3>
 
           {/* Rating */}
-          {product.rating !== undefined && (
+          {rating !== undefined && reviewCount > 0 && (
             <div className="flex items-center gap-1 mb-2">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
@@ -113,18 +115,16 @@ function ProductCard({ product, onQuickView }) {
                     key={i}
                     className={cn(
                       "w-4 h-4",
-                      i < Math.floor(product.rating)
+                      i < Math.floor(rating)
                         ? "text-amber-400 fill-current"
                         : "text-gray-300",
                     )}
                   />
                 ))}
               </div>
-              {product.reviewCount !== undefined && (
-                <span className="text-xs text-gray-500">
-                  ({product.reviewCount})
-                </span>
-              )}
+              <span className="text-xs text-gray-500">
+                ({reviewCount})
+              </span>
             </div>
           )}
 

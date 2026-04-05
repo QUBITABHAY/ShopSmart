@@ -16,6 +16,7 @@ import { useCart } from "../hooks/useCart";
 import { formatCurrency } from "../utils/formatters";
 import { PageLoader } from "../components/common";
 import { cn } from "../lib/utils";
+import { getRatingStats } from "../utils/product";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -50,20 +51,7 @@ function ProductDetail() {
   };
 
   // Calculate rating stats
-  const ratingStats = product.ratingStars || {};
-  const totalStarVotes = Object.values(ratingStats).reduce(
-    (a, b) => a + Number(b),
-    0,
-  );
-
-  const ratingDistribution = [5, 4, 3, 2, 1].map((star) => ({
-    star,
-    count: Number(ratingStats[star]) || 0,
-    percentage:
-      totalStarVotes > 0
-        ? ((Number(ratingStats[star]) || 0) / totalStarVotes) * 100
-        : 0,
-  }));
+  const { rating, reviewCount, distribution } = getRatingStats(product);
 
   return (
     <div className="min-h-screen bg-white">
@@ -134,7 +122,7 @@ function ProductDetail() {
               )}
 
               {/* Rating */}
-              {product.rating !== undefined && (
+              {rating !== undefined && reviewCount > 0 && (
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
@@ -142,7 +130,7 @@ function ProductDetail() {
                         key={i}
                         className={cn(
                           "w-5 h-5",
-                          i < Math.floor(product.rating)
+                          i < Math.floor(rating)
                             ? "text-amber-400 fill-current"
                             : "text-gray-300",
                         )}
@@ -150,7 +138,7 @@ function ProductDetail() {
                     ))}
                   </div>
                   <span className="text-gray-600">
-                    {product.rating} ({product.reviewCount} reviews)
+                    {rating} ({reviewCount} reviews)
                   </span>
                 </div>
               )}
@@ -300,7 +288,7 @@ function ProductDetail() {
                           key={i}
                           className={cn(
                             "w-4 h-4",
-                            i < Math.round(product.rating || 0)
+                            i < Math.round(rating || 0)
                               ? "text-amber-400 fill-current"
                               : "text-gray-200",
                           )}
@@ -308,17 +296,17 @@ function ProductDetail() {
                       ))}
                     </div>
                     <span className="text-sm font-medium text-gray-600">
-                      {product.rating} out of 5
+                      {rating} out of 5
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 mt-1">
-                    {totalStarVotes} global ratings
+                    {reviewCount} global ratings
                   </p>
                 </div>
 
                 {/* Star Bars */}
                 <div className="space-y-3">
-                  {ratingDistribution.map((row) => (
+                  {distribution.map((row) => (
                     <div
                       key={row.star}
                       className="flex items-center gap-4 group cursor-help"
