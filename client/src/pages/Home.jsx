@@ -50,7 +50,15 @@ function Home() {
       try {
         const response = await productService.getCategories();
         if (response.success) {
-          setCategories(response.data.categories);
+          const categorized = response.data.categories.map((cat) => ({
+            ...cat,
+            randomImage:
+              (cat.products?.length > 0
+                ? cat.products[Math.floor(Math.random() * cat.products.length)]
+                    .image
+                : cat.image) || "/placeholder-category.jpg",
+          }));
+          setCategories(categorized);
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -164,7 +172,7 @@ function Home() {
                   >
                     <div className="aspect-square">
                       <img
-                        src={product.imageUrl}
+                        src={product.image}
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
@@ -243,15 +251,15 @@ function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((cat) => (
+            {categories.slice(0, 8).map((cat) => (
               <Link
                 key={cat.id}
                 to={`/products?category=${cat.id}`}
                 className="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-gray-100"
               >
-                {cat.image ? (
+                {cat.randomImage ? (
                   <img
-                    src={cat.image}
+                    src={cat.randomImage}
                     alt={cat.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -306,7 +314,7 @@ function Home() {
                 >
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
                     <img
-                      src={product.imageUrl}
+                      src={product.image}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -351,7 +359,7 @@ function Home() {
                   </div>
                   <div className="p-4">
                     <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
-                      {product.category}
+                      {product.category?.name}
                     </p>
                     <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
                       {product.name}

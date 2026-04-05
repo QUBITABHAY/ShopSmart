@@ -13,7 +13,7 @@ function QuickView({ product, isOpen, onClose }) {
   if (!product) return null;
 
   const images =
-    product.images?.length > 0 ? product.images : [product.imageUrl];
+    product.imageUrls?.length > 0 ? product.imageUrls : [product.image];
 
   const handleAddToCart = () => {
     addItem(product, quantity);
@@ -72,9 +72,14 @@ function QuickView({ product, isOpen, onClose }) {
         <div className="space-y-4">
           <div>
             <p className="text-sm text-gray-500 uppercase tracking-wider mb-1">
-              {product.category}
+              {product.category?.name}
             </p>
             <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
+            {product.seller && (
+              <p className="text-xs text-gray-500 mt-1">
+                Sold by <span className="font-semibold">{product.seller}</span>
+              </p>
+            )}
           </div>
 
           {/* Rating */}
@@ -122,7 +127,26 @@ function QuickView({ product, isOpen, onClose }) {
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 line-clamp-3">{product.description}</p>
+          <p className="text-gray-600 line-clamp-2 text-sm">
+            {product.description}
+          </p>
+
+          {/* Quick Specs */}
+          {product.specifications?.length > 0 && (
+            <div className="bg-gray-50 p-3 rounded-lg border text-xs space-y-1">
+              <p className="font-bold text-gray-700 mb-1 border-b pb-1">
+                Quick Specs
+              </p>
+              {product.specifications.slice(0, 4).map((spec, i) => (
+                <div key={i} className="flex justify-between">
+                  <span className="text-gray-500">{spec.name}</span>
+                  <span className="font-medium text-gray-900 truncate max-w-[150px]">
+                    {spec.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Stock Status */}
           <div className="flex items-center gap-2">

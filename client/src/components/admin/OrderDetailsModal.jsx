@@ -1,6 +1,5 @@
 import { X, Package, User, MapPin } from "lucide-react";
-import { formatCurrency } from "../../lib/utils";
-import { cn } from "../../lib/utils";
+import { cn, formatCurrency } from "../../lib/utils";
 
 const OrderDetailsModal = ({ isOpen, onClose, order }) => {
   if (!isOpen || !order) return null;

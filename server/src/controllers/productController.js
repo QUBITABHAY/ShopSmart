@@ -117,7 +117,22 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, image, stock, categoryId } = req.body;
+    const {
+      name,
+      description,
+      price,
+      image,
+      imageUrls,
+      specifications,
+      ratingStars,
+      colors,
+      seller,
+      customerReviews,
+      discount,
+      currency,
+      stock,
+      categoryId,
+    } = req.body;
 
     if (!name || !price || !categoryId) {
       return res.status(400).json({
@@ -142,7 +157,15 @@ export const createProduct = async (req, res) => {
         name,
         description: description || null,
         price: parseFloat(price),
+        currency: currency || "USD",
         image: image || null,
+        imageUrls: imageUrls || [],
+        specifications: specifications || null,
+        ratingStars: ratingStars || null,
+        colors: colors || [],
+        seller: seller || null,
+        customerReviews: customerReviews || null,
+        discount: discount ? parseFloat(discount) : 0,
         stock: stock ? parseInt(stock) : 0,
         categoryId,
       },
@@ -175,7 +198,23 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, image, stock, categoryId } = req.body;
+    const {
+      name,
+      description,
+      price,
+      currency,
+      image,
+      imageUrls,
+      specifications,
+      ratingStars,
+      colors,
+      seller,
+      customerReviews,
+      discount,
+      stock,
+      categoryId,
+    } = req.body;
+
     const existingProduct = await prisma.product.findUnique({
       where: { id },
     });
@@ -204,7 +243,17 @@ export const updateProduct = async (req, res) => {
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
     if (price !== undefined) updateData.price = parseFloat(price);
+    if (currency !== undefined) updateData.currency = currency;
     if (image !== undefined) updateData.image = image;
+    if (imageUrls !== undefined) updateData.imageUrls = imageUrls;
+    if (specifications !== undefined)
+      updateData.specifications = specifications;
+    if (ratingStars !== undefined) updateData.ratingStars = ratingStars;
+    if (colors !== undefined) updateData.colors = colors;
+    if (seller !== undefined) updateData.seller = seller;
+    if (customerReviews !== undefined)
+      updateData.customerReviews = customerReviews;
+    if (discount !== undefined) updateData.discount = parseFloat(discount);
     if (stock !== undefined) updateData.stock = parseInt(stock);
     if (categoryId !== undefined) updateData.categoryId = categoryId;
 

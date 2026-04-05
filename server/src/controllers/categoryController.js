@@ -5,6 +5,10 @@ export const getCategories = async (req, res) => {
     const categories = await prisma.category.findMany({
       orderBy: { name: "asc" },
       include: {
+        products: {
+          take: 10,
+          select: { image: true },
+        },
         _count: {
           select: { products: true },
         },

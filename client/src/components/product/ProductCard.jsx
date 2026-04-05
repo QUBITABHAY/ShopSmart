@@ -38,7 +38,7 @@ function ProductCard({ product, onQuickView }) {
         {/* Image Container */}
         <div className="relative aspect-square overflow-hidden bg-gray-100">
           <img
-            src={product.imageUrl || "/placeholder-product.jpg"}
+            src={product.image || "/placeholder-product.jpg"}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -96,7 +96,7 @@ function ProductCard({ product, onQuickView }) {
         <div className="p-4">
           {/* Category */}
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
-            {product.category}
+            {product.category?.name}
           </p>
 
           {/* Name */}
@@ -133,11 +133,15 @@ function ProductCard({ product, onQuickView }) {
             <span className="text-lg font-bold text-gray-900">
               {formatCurrency(product.price)}
             </span>
-            {product.originalPrice && product.originalPrice > product.price && (
+            {product.discount > 0 ? (
+              <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                {Math.round(product.discount)}% OFF
+              </span>
+            ) : product.originalPrice > product.price ? (
               <span className="text-sm text-gray-500 line-through">
                 {formatCurrency(product.originalPrice)}
               </span>
-            )}
+            ) : null}
           </div>
         </div>
       </Link>

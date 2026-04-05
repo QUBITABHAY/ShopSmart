@@ -7,6 +7,12 @@ export function useProducts(initialFilters = {}) {
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
   const [categories, setCategories] = useState([]);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    totalPages: 1,
+    limit: 10,
+  });
 
   const fetchProducts = useCallback(
     async (filterParams = filters) => {
@@ -16,6 +22,9 @@ export function useProducts(initialFilters = {}) {
         const data = await productService.getAll(filterParams);
         if (data.success) {
           setProducts(data.data.products);
+          if (data.data.pagination) {
+            setPagination(data.data.pagination);
+          }
         }
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch products");
@@ -42,7 +51,9 @@ export function useProducts(initialFilters = {}) {
     setError(null);
     try {
       const data = await productService.search(query);
-      setProducts(data.products || data);
+      if (data.success) {
+        setProducts(data.data.products);
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Search failed");
     } finally {
@@ -68,6 +79,7 @@ export function useProducts(initialFilters = {}) {
   return {
     products,
     categories,
+    pagination,
     loading,
     error,
     filters,
@@ -90,7 +102,9 @@ export function useProduct(productId) {
     setError(null);
     try {
       const data = await productService.getById(productId);
-      setProduct(data.product || data);
+      if (data.success) {
+        setProduct(data.data.product);
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch product");
     } finally {
