@@ -1,14 +1,17 @@
+const EXCHANGE_RATE = 92;
+
 /**
- * Format price as currency
- * @param {number} amount
- * @param {string} currency
+ * Format price as currency (Converts from USD to INR)
+ * @param {number} amount - Amount in USD
+ * @param {string} currency - Target currency code
  * @returns {string}
  */
 export function formatCurrency(amount, currency = "INR") {
+  const convertedAmount = amount * EXCHANGE_RATE;
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency,
-  }).format(amount);
+  }).format(convertedAmount);
 }
 
 /**

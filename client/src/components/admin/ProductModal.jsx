@@ -22,7 +22,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSave }) => {
         setFormData({
           name: product.name || "",
           description: product.description || "",
-          price: product.price || "",
+          price: product.price ? (product.price * 92).toFixed(2) : "",
           stock: product.stock || "",
           categoryId: product.categoryId || "",
           image: product.image || "",
@@ -57,10 +57,15 @@ const ProductModal = ({ isOpen, onClose, product = null, onSave }) => {
     setError(null);
 
     try {
+      const payload = {
+        ...formData,
+        price: parseFloat(formData.price) / 92,
+      };
+
       if (product) {
-        await productService.update(product.id, formData);
+        await productService.update(product.id, payload);
       } else {
-        await productService.create(formData);
+        await productService.create(payload);
       }
       onSave();
       onClose();
@@ -119,7 +124,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSave }) => {
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-gray-700">
-                Price ($)
+                Price (₹)
               </label>
               <input
                 required

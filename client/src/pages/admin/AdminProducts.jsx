@@ -10,6 +10,7 @@ import {
 import { productService } from "../../services/product.service";
 import ProductModal from "../../components/admin/ProductModal";
 import { cn } from "../../lib/utils";
+import { formatCurrency } from "../../utils/formatters";
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -196,7 +197,7 @@ const AdminProducts = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-gray-900 font-medium">
-                      ${product.price.toFixed(2)}
+                      {formatCurrency(product.price)}
                     </td>
                     <td className="px-6 py-4">
                       <span
