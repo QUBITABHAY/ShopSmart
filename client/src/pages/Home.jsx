@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -14,7 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Container } from "../components/layout";
-import { QuickView } from "../components/product";
+const QuickView = lazy(() => import("../components/product/QuickView"));
 import { productService } from "../services/product.service";
 import { Loader } from "../components/common";
 import { useCart } from "../hooks/useCart";
@@ -427,11 +427,13 @@ function Home() {
       </section>
 
 
-      <QuickView
-        product={quickViewProduct}
-        isOpen={!!quickViewProduct}
-        onClose={() => setQuickViewProduct(null)}
-      />
+      <Suspense fallback={<Loader />}>
+        <QuickView
+          product={quickViewProduct}
+          isOpen={!!quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+        />
+      </Suspense>
     </div>
   );
 }
