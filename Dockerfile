@@ -13,9 +13,12 @@ FROM node:22-alpine AS server-build
 WORKDIR /build/server
 
 COPY server/package*.json ./
+COPY server/prisma ./prisma
+COPY server/prisma.config.js ./
 RUN npm ci
 
 COPY server/ ./
+RUN npx prisma generate
 
 FROM node:22-alpine AS runtime
 
@@ -27,4 +30,4 @@ COPY --from=client-build /build/client/dist ./client-dist
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && npm start"]

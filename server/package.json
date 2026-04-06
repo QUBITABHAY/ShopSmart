@@ -4,8 +4,11 @@
   "description": "Backend API for ShopSmart",
   "main": "src/index.js",
   "scripts": {
+    "prestart": "prisma generate",
     "start": "node src/index.js",
+    "predev": "prisma generate",
     "dev": "nodemon src/index.js",
+    "postinstall": "prisma generate",
     "test": "node --experimental-vm-modules -r dotenv/config node_modules/jest/bin/jest.js",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0"
   },
