@@ -6,7 +6,10 @@ function CartItem({ item, compact = false }) {
   const { updateQuantity, removeItem } = useCart();
 
   const handleIncrement = () => {
-    updateQuantity(item.id, item.quantity + 1);
+    const stock = item.product?.stock ?? item.stock ?? Infinity;
+    if (item.quantity < stock) {
+      updateQuantity(item.id, item.quantity + 1);
+    }
   };
 
   const handleDecrement = () => {
@@ -80,7 +83,8 @@ function CartItem({ item, compact = false }) {
             </span>
             <button
               onClick={handleIncrement}
-              className="p-2 hover:bg-gray-100 transition-colors"
+              disabled={item.quantity >= (item.product?.stock ?? item.stock ?? Infinity)}
+              className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>

@@ -82,11 +82,25 @@ export const addToCart = async (req, res) => {
     });
 
     if (existingItem) {
+      if (existingItem.quantity + quantity > product.stock) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot add more. Only ${product.stock} items in stock.`,
+        });
+      }
+
       await prisma.cartItem.update({
         where: { id: existingItem.id },
         data: { quantity: existingItem.quantity + quantity },
       });
     } else {
+      if (quantity > product.stock) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot add more. Only ${product.stock} items in stock.`,
+        });
+      }
+
       await prisma.cartItem.create({
         data: {
           cartId: cart.id,
@@ -136,13 +150,20 @@ export const updateCartItem = async (req, res) => {
 
     const cartItem = await prisma.cartItem.findUnique({
       where: { id: itemId },
-      include: { cart: true },
+      include: { cart: true, product: true },
     });
 
     if (!cartItem || cartItem.cart.userId !== req.user.id) {
       return res.status(404).json({
         success: false,
         message: "Cart item not found",
+      });
+    }
+
+    if (quantity > cartItem.product.stock) {
+      return res.status(400).json({
+        success: false,
+        message: `Only ${cartItem.product.stock} items available in stock.`,
       });
     }
 
