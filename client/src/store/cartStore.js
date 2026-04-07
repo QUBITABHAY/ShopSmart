@@ -38,7 +38,7 @@ const useCartStore = create(
             set({
               items: items.map((item) =>
                 item.productId === product.id
-                  ? { ...item, quantity: Math.min(item.quantity + quantity, product.stock) }
+                  ? { ...item, quantity: Math.min(item.quantity + quantity, product.stock ?? Infinity) }
                   : item
               ),
             });
@@ -52,7 +52,7 @@ const useCartStore = create(
                   name: product.name,
                   price: product.price,
                   imageUrl: product.imageUrl || product.image,
-                  quantity: Math.min(quantity, product.stock),
+                  quantity: Math.min(quantity, product.stock ?? Infinity),
                   product: { stock: product.stock }
                 },
               ],
