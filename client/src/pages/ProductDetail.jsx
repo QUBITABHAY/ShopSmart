@@ -24,6 +24,7 @@ function ProductDetail() {
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isAdding, setIsAdding] = useState(false);
 
   if (loading) return <PageLoader />;
 
@@ -48,6 +49,8 @@ function ProductDetail() {
 
   const handleAddToCart = () => {
     addItem(product, quantity);
+    setIsAdding(true);
+    setTimeout(() => setIsAdding(false), 2000);
   };
 
   // Calculate rating stats
@@ -216,11 +219,25 @@ function ProductDetail() {
 
               <button
                 onClick={handleAddToCart}
-                disabled={product.stock === 0}
-                className="flex-1 btn-primary py-4 text-lg"
+                disabled={product.stock === 0 || isAdding}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-3 py-4 text-lg font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl active:scale-[0.98] disabled:opacity-80 disabled:transform-none disabled:shadow-none",
+                  isAdding
+                    ? "bg-green-500 text-white shadow-green-200/50"
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/30"
+                )}
               >
-                <ShoppingCart className="w-5 h-5" />
-                Add to Cart
+                {isAdding ? (
+                  <>
+                    <CheckCircle className="w-6 h-6 animate-[bounce_0.5s_ease-in-out_1]" />
+                    <span>Added to Cart!</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    <span>Add to Cart</span>
+                  </>
+                )}
               </button>
 
               <button className="p-4 border-2 rounded-lg text-gray-600 hover:border-red-300 hover:text-red-500 transition-colors">

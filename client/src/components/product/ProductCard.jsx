@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
+import { ShoppingCart, Heart, Star, Eye, CheckCircle } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";
@@ -12,10 +12,14 @@ function ProductCard({ product, onQuickView }) {
   const { addItem } = useCart();
   const { rating, reviewCount } = getRatingStats(product);
 
+  const [isAdding, setIsAdding] = useState(false);
+
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
+    setIsAdding(true);
+    setTimeout(() => setIsAdding(false), 1500);
   };
 
   const toggleWishlist = (e) => {
@@ -61,10 +65,20 @@ function ProductCard({ product, onQuickView }) {
             </button>
             <button
               onClick={handleAddToCart}
-              className="p-3 bg-primary rounded-full shadow-lg hover:bg-blue-700 transition-colors transform hover:scale-110"
-              title="Add to Cart"
+              disabled={isAdding || product.stock === 0}
+              className={cn(
+                "p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 disabled:opacity-80 disabled:cursor-not-allowed",
+                isAdding 
+                  ? "bg-green-500 hover:bg-green-600" 
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+              )}
+              title={isAdding ? "Added to Cart" : "Add to Cart"}
             >
-              <ShoppingCart className="w-5 h-5 text-white" />
+              {isAdding ? (
+                <CheckCircle className="w-5 h-5 text-white animate-[ping_0.5s_cubic-bezier(0,0,0.2,1)_1]" />
+              ) : (
+                <ShoppingCart className="w-5 h-5 text-white" />
+              )}
             </button>
           </div>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Minus, Plus, ShoppingCart, Star, Heart } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Star, Heart, CheckCircle } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";
@@ -10,6 +10,7 @@ function QuickView({ product, isOpen, onClose }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const { addItem } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
 
   if (!product) return null;
 
@@ -20,7 +21,11 @@ function QuickView({ product, isOpen, onClose }) {
 
   const handleAddToCart = () => {
     addItem(product, quantity);
-    onClose();
+    setIsAdding(true);
+    setTimeout(() => {
+      setIsAdding(false);
+      onClose();
+    }, 1000);
   };
 
   const incrementQuantity = () => {
@@ -195,11 +200,25 @@ function QuickView({ product, isOpen, onClose }) {
           <div className="flex gap-3 pt-4">
             <button
               onClick={handleAddToCart}
-              disabled={product.stock === 0}
-              className="flex-1 btn-primary"
+              disabled={product.stock === 0 || isAdding}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 disabled:opacity-80 disabled:transform-none disabled:shadow-none",
+                isAdding
+                  ? "bg-green-500 text-white"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/20"
+              )}
             >
-              <ShoppingCart className="w-5 h-5" />
-              Add to Cart
+              {isAdding ? (
+                <>
+                  <CheckCircle className="w-5 h-5 animate-pulse" />
+                  Added!
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-5 h-5" />
+                  Add to Cart
+                </>
+              )}
             </button>
             <button className="p-3 border-2 border-gray-200 rounded-lg hover:border-red-300 hover:text-red-500 transition-colors">
               <Heart className="w-5 h-5" />
