@@ -1,7 +1,17 @@
 services:
-  app:
+  client:
     build:
-      context: .
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./server
       dockerfile: Dockerfile
     depends_on:
       db:
@@ -10,8 +20,6 @@ services:
       PORT: 3000
       DATABASE_URL: postgresql://shopsmart:${POSTGRES_PASSWORD}@db:5432/shopsmart?schema=public
       JWT_SECRET: ${JWT_SECRET}
-    ports:
-      - "80:3000"
     restart: unless-stopped
 
   db:
