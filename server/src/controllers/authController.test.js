@@ -25,7 +25,7 @@ jest.unstable_mockModule('../utils/auth.js', () => ({
 const bcrypt = (await import('bcryptjs')).default;
 const prisma = (await import('../config/db.js')).default;
 const { generateToken } = await import('../utils/auth.js');
-const { register, login, getProfile, updateProfile } = await import('./authController.js');
+const { register, login, getProfile } = await import('./authController.js');
 
 describe('Auth Controller', () => {
   let req, res;

@@ -32,6 +32,14 @@ app.use('/api/addresses', addressRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/users', userRoutes);
 
+// Health Check Route
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'ShopSmart Backend is running',
+    timestamp: new Date().toISOString()
+  });
+});
 // Return JSON for unknown API routes instead of SPA fallback HTML.
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'API route not found' });
@@ -45,14 +53,6 @@ if (hasClientBuild) {
   });
 }
 
-// Health Check Route
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'ShopSmart Backend is running',
-    timestamp: new Date().toISOString()
-  });
-});
 
 // Root Route (optional, just to show something)
 app.get('/', (req, res) => {
