@@ -17,7 +17,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      PORT: 3000
+      PORT: "3000"
       DATABASE_URL: postgresql://shopsmart:${POSTGRES_PASSWORD}@db:5432/shopsmart?schema=public
       JWT_SECRET: ${JWT_SECRET}
     restart: unless-stopped

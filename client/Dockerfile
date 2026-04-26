@@ -1,26 +1,21 @@
-# Build Stage
-FROM node:22-alpine AS build
+# Build stage
+FROM node:24-alpine as build-stage
+
 WORKDIR /app
 
-# Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copy application code and build
-COPY . ./
+COPY . .
 RUN npm run build
 
-# Server Stage
-FROM nginx:alpine
+# Production stage
+FROM nginx:stable-alpine as production-stage
 
-# Remove default nginx config to avoid conflict
-RUN rm /etc/nginx/conf.d/default.conf
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Add custom configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy compiled SPA over to Nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy custom nginx config if you have one, otherwise use default
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
